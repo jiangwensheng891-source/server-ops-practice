@@ -1,0 +1,22 @@
+services:
+  uptime-kuma:
+    image: louislam/uptime-kuma:1
+    container_name: uptime-kuma
+    restart: always
+    ports:
+      - "127.0.0.1:3001:3001"     # 只走本地，撤下公网
+    volumes:
+      - uptime-kuma:/app/data     # 用现有卷
+    environment:
+      - UPTIME_KUMA_BASE_URL=https://monitor.example.com:8443
+      - TZ=Asia/Shanghai
+    mem_limit: 256m
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  uptime-kuma:
+    external: true                # 🚨 关键！用现有卷，不新建
